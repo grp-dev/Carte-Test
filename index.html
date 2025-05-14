@@ -1,50 +1,45 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Carte des Faits Divers</title>
+  <meta charset="utf-8" />
+  <title>Carte des faits divers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-    }
-    header {
-      background: #2c3e50;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    #map {
-      height: 90vh;
-      width: 100%;
-    }
+    #map { height: 100vh; }
   </style>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
-  <header>
-    <h1>Carte interactive des faits divers</h1>
-    <p>Sources : Presse locale</p>
-  </header>
+<h2 style="text-align:center;">Carte des faits divers</h2>
+<div id="map"></div>
 
-  <div id="map"></div>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/tabletop@1.6.0/tabletop.js"></script>
+<script>
+  const publicSpreadsheetUrl = 'VOTRE_URL_GOOGLE_SHEET_ICI';
 
-  <script>
-    // Création de la carte centrée sur la France
-    const map = L.map('map').setView([46.5, 2.2], 6);
+  const map = L.map('map').setView([46.5, 2.5], 6); // Vue centrée sur la France
 
-    // Fond de carte OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-    // Exemple de marqueur
-    const marker = L.marker([48.8566, 2.3522]).addTo(map);
-    marker.bindPopup("<strong>Paris</strong><br>Exemple de fait divers<br><a href='https://example.com' target='_blank'>Source</a>");
-  </script>
+  function showInfo(data) {
+    data.forEach(row => {
+      if (!row.latitude || !row.longitude) return;
+      const marker = L.marker([parseFloat(row.latitude), parseFloat(row.longitude)]).addTo(map);
+      marker.bindPopup(`<strong>${row.title}</strong><br><a href="${row.url}" target="_blank">Voir l'article</a>`);
+    });
+  }
 
+  window.addEventListener('DOMContentLoaded', () => {
+    Tabletop.init({
+      key: publicSpreadsheetUrl,
+      simpleSheet: true,
+      callback: showInfo
+    });
+  });
+</script>
 </body>
 </html>
