@@ -1,39 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <title>Carte – Hello There</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Feuille de style Leaflet -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carte des Faits Divers</title>
   <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+    }
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
     #map {
-      height: 100vh;
+      height: 90vh;
+      width: 100%;
     }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
-<div id="map"></div>
+  <header>
+    <h1>Carte interactive des faits divers</h1>
+    <p>Sources : Presse locale</p>
+  </header>
 
-<!-- Script Leaflet -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-  // Initialisation de la carte centrée sur Paris
-  var map = L.map('map').setView([48.8566, 2.3522], 13);
+  <div id="map"></div>
 
-  // Ajout des tuiles OpenStreetMap
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
-  }).addTo(map);
+  <script>
+    // Création de la carte centrée sur la France
+    const map = L.map('map').setView([46.5, 2.2], 6);
 
-  // Ajout d’un marqueur avec un popup
-  L.marker([48.8566, 2.3522])
-    .addTo(map)
-    .bindPopup('Hello there.')
-    .openPopup();
-</script>
+    // Fond de carte OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Exemple de marqueur
+    const marker = L.marker([48.8566, 2.3522]).addTo(map);
+    marker.bindPopup("<strong>Paris</strong><br>Exemple de fait divers<br><a href='https://example.com' target='_blank'>Source</a>");
+  </script>
 
 </body>
 </html>
